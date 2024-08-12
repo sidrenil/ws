@@ -3,6 +3,7 @@
     <img :src="image" alt="Product image" class="card-image" />
     <div class="card-body">
       <h2 class="card-title">{{ title }}</h2>
+      <p class="card-category">{{ category }}</p>
       <p class="card-price">{{ formatCurrency(price) }}</p>
     </div>
   </div>
@@ -15,6 +16,7 @@ const props = defineProps({
   image: String,
   title: String,
   price: Number,
+  category: String,
 });
 
 const formatCurrency = (value) => {
@@ -63,6 +65,12 @@ const formatCurrency = (value) => {
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 4px;
+}
+
+.card-category {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 8px;
 }
 
 .card-price {
