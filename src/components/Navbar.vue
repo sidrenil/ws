@@ -1,8 +1,10 @@
 <template>
   <nav>
     <div class="navbar-container">
-      <i class="fas fa-arrow-left icon-container" @click="goBack"></i>
-      <ul>
+      <div class="backbtn-container">
+        <i class="fas fa-arrow-left backbtn" @click="goBack"></i>
+      </div>
+      <ul class="menu">
         <li><router-link to="/" class="text-xl">Home Page</router-link></li>
         <li><router-link to="/" class="text-xl">Categories</router-link></li>
         <li><router-link to="/" class="text-xl">Profile</router-link></li>
@@ -41,26 +43,32 @@ nav {
   position: relative;
 }
 
-nav ul {
+.backbtn-container {
+  position: absolute;
+  left: 10px;
+}
+
+nav ul.menu {
   list-style-type: none;
   padding: 0;
   margin: 0;
   display: flex;
   justify-content: center;
+  flex: 1;
 }
 
-nav ul li {
-  margin: 0 5px;
+nav ul.menu li {
+  margin: 0 15px;
 }
 
-.icon-container {
+.backbtn {
   font-size: 1.5rem;
   color: #007bff;
   cursor: pointer;
   transition: transform 0.2s, color 0.2s;
 }
 
-.icon-container:hover {
+.backbtn:hover {
   transform: scale(1.1);
   color: #0056b3;
 }

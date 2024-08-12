@@ -91,6 +91,7 @@ onMounted(() => {
 }
 
 .loading {
+  margin-top: 25px;
   text-align: center;
   padding: 20px;
   font-size: 1.25rem;
