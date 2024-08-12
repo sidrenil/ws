@@ -10,26 +10,46 @@
         :title="product.title"
         :price="product.price"
         :category="product.category"
+        @click="goToDetail(product.id)"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import Card from "../components/Card.vue";
+import { useRouter } from "vue-router";
 
 const products = ref([]);
+const categories = ref([]);
+const selectedCategory = ref(null);
 
-onMounted(async () => {
-  try {
-    const response = await axios.get("https://dummyjson.com/products");
-    products.value = response.data.products;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-  }
+const router = useRouter();
+
+onMounted(() => {
+  axios
+    .get("https://dummyjson.com/products")
+    .then((response) => {
+      products.value = response.data.products;
+      categories.value = [...new Set(products.value.map((p) => p.category))];
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 });
+
+const filteredProducts = computed(() => {
+  if (!selectedCategory.value) return products.value;
+  return products.value.filter(
+    (product) => product.category === selectedCategory.value
+  );
+});
+
+const goToDetail = (productId) => {
+  router.push({ name: "ProductDetail", params: { id: productId } });
+};
 </script>
 
 <style>
