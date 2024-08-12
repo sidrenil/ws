@@ -31,9 +31,10 @@ nav {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: antiquewhite;
-  padding: 10px;
+  background-color: rgb(192, 203, 240);
+  padding: 30px 20px;
   z-index: 1000;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-container {

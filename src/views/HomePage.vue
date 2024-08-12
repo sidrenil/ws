@@ -55,10 +55,11 @@ const goToDetail = (productId) => {
 <style>
 .home-page {
   padding: 20px;
+  margin-top: 50px;
 }
 
 .card-container {
-  margin-top: 50px;
+  margin-top: 70px;
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
