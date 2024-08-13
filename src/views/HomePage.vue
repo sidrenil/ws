@@ -66,6 +66,7 @@ const goToDetail = (productId) => {
 
 .card-container {
   margin-top: 70px;
+  margin: 50px;
   display: flex;
   flex-wrap: wrap;
   gap: 30px;

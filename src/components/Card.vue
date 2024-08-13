@@ -1,19 +1,31 @@
 <template>
-  <div class="card">
-    <div class="icon-container" @click.stop="addToCart">
-      <i class="fas fa-basket-shopping"></i>
+  <div>
+    <div class="card">
+      <div class="icon-container" @click.stop="addToCart">
+        <i class="fas fa-basket-shopping"></i>
+      </div>
+      <img :src="image" alt="Product image" class="w-full h-1/2 object-cover" />
+      <div class="w-full flex flex-col items-center justify-center p-4">
+        <p class="text-base font-semibold mb-1 text-center w-full truncate">
+          {{ title }}
+        </p>
+        <p class="text-lg text-gray-500 mb-1 text-center w-full truncate">
+          {{ category }}
+        </p>
+        <p class="text-sm text-gray-600 text-center w-full truncate">
+          {{ formatCurrency(price) }}
+        </p>
+      </div>
     </div>
-    <img :src="image" alt="Product image" class="w-full h-1/2 object-cover" />
-    <div class="w-full h-2/4 flex flex-col items-center justify-center p-10">
-      <p class="text-base font-semibold mb-4">{{ title }}</p>
-      <p class="text-lg text-gray-500 mb-2">{{ category }}</p>
-      <p class="text-sm text-gray-600">{{ formatCurrency(price) }}</p>
+
+    <div v-if="showAlert" class="alert-message">
+      <p>{{ alertMessage }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   image: String,
@@ -23,6 +35,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update-cart"]);
+
+const showAlert = ref(false);
+const alertMessage = ref("");
 
 const formatCurrency = (value) => {
   return `$${parseFloat(value).toFixed(2)}`;
@@ -39,8 +54,13 @@ const addToCart = () => {
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-
   emit("update-cart");
+
+  alertMessage.value = `${props.title} has been added to your basket`;
+  showAlert.value = true;
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 3000);
 };
 </script>
 
@@ -75,7 +95,8 @@ const addToCart = () => {
   border-radius: 50%;
   padding: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, background-color 0.2s, font-size 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
+  z-index: 10;
 }
 
 .icon-container i {
@@ -90,5 +111,18 @@ const addToCart = () => {
 .icon-container:hover i {
   color: #0056b3;
   font-size: 1.2rem;
+}
+
+.alert-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #5182db;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 }
 </style>

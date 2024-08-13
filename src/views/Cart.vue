@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Cart</h1>
+    <h1>Basket</h1>
     <div v-if="cart.length > 0">
       <ul>
         <li v-for="(item, index) in cart" :key="index" class="cart-item">
@@ -19,6 +19,10 @@
     <div v-else>
       <p>Your cart is currently empty.</p>
     </div>
+
+    <div v-if="showAlert" class="alert-message">
+      <p>{{ alertMessage }}</p>
+    </div>
   </div>
 </template>
 
@@ -26,6 +30,8 @@
 import { ref, onMounted } from "vue";
 
 const cart = ref([]);
+const showAlert = ref(false);
+const alertMessage = ref("");
 
 const formatCurrency = (value) => {
   return `$${parseFloat(value).toFixed(2)}`;
@@ -36,11 +42,19 @@ onMounted(() => {
 });
 
 const removeItem = (index) => {
+  const removedItem = cart.value[index];
   cart.value.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart.value));
   window.dispatchEvent(new CustomEvent("update-cart"));
+
+  alertMessage.value = `${removedItem.title} has been removed from your basket`;
+  showAlert.value = true;
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 3000);
 };
 </script>
+
 <style scoped>
 .cart-item {
   display: flex;
@@ -83,5 +97,18 @@ const removeItem = (index) => {
 
 .remove-button:hover {
   background-color: #ff4b4b;
+}
+
+.alert-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f57979;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 }
 </style>
