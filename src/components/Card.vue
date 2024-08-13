@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="icon-container">
+    <div class="icon-container" @click="addToCart">
       <i class="fas fa-basket-shopping"></i>
     </div>
     <img :src="image" alt="Product image" class="card-image" />
@@ -24,6 +24,20 @@ const props = defineProps({
 
 const formatCurrency = (value) => {
   return `$${parseFloat(value).toFixed(2)}`;
+};
+const addToCart = () => {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart.push({
+    image: props.image,
+    title: props.title,
+    price: props.price,
+    category: props.category,
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert(`${props.title} has been added to your cart!`);
 };
 </script>
 

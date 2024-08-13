@@ -10,6 +10,9 @@
         <li><router-link to="/" class="text-xl">Profile</router-link></li>
         <li><button @click="logout" class="text-xl">Log-Out</button></li>
       </ul>
+      <router-link to="/cart">
+        <i class="fa-solid fa-cart-shopping cartshp"></i>
+      </router-link>
     </div>
   </nav>
 </template>
@@ -78,5 +81,17 @@ button {
   background: none;
   border: none;
   cursor: pointer;
+}
+.cartshp {
+  margin-right: 30px;
+  font-size: 1.3rem;
+  color: #007bff;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.cartshp:hover {
+  transform: scale(1.1);
+  color: #0056b3;
 }
 </style>
