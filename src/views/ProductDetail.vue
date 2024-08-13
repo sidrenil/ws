@@ -33,6 +33,10 @@ const addToCart = () => {
       price: product.value.price,
       category: product.value.category,
     });
+
+    // Dispatch custom event to update cart count
+    window.dispatchEvent(new CustomEvent("update-cart"));
+
     console.log("Product added to cart:", product.value);
   }
 };
