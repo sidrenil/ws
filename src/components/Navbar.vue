@@ -24,16 +24,6 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-const goBack = () => {
-  router.back();
-};
-
-function logout() {
-  console.log("successfully exited");
-}
 
 const cartItemCount = ref(0);
 

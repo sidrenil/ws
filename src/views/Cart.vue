@@ -38,9 +38,9 @@ onMounted(() => {
 const removeItem = (index) => {
   cart.value.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart.value));
+  window.dispatchEvent(new CustomEvent("update-cart"));
 };
 </script>
-
 <style scoped>
 .cart-item {
   display: flex;
