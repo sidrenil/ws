@@ -4,9 +4,13 @@
       class="card-container grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
     >
       <Card
-        v-for="product in products"
+        v-for="product in filteredProducts"
         :key="product.id"
-        :image="product.image"
+        :image="
+          product.images && product.images.length > 0
+            ? product.images[0]
+            : 'path/to/default-image.png'
+        "
         :title="product.title"
         :price="product.price"
         :category="product.category"

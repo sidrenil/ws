@@ -4,7 +4,11 @@
       <div class="icon-container" @click.stop="addToCart">
         <i class="fas fa-basket-shopping"></i>
       </div>
-      <img :src="image" alt="Product image" class="w-full h-1/2 object-cover" />
+      <img
+        :src="image"
+        alt="Product image"
+        class="w-full h-1/2 object-cover card-image"
+      />
       <div class="w-full flex flex-col items-center justify-center p-4">
         <p class="text-base font-semibold mb-1 text-center w-full truncate">
           {{ title }}
@@ -45,7 +49,6 @@ const formatCurrency = (value) => {
 
 const addToCart = () => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
   cart.push({
     image: props.image,
     title: props.title,
@@ -74,8 +77,8 @@ const addToCart = () => {
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -124,5 +127,10 @@ const addToCart = () => {
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   z-index: 1000;
+}
+.card-image {
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
 }
 </style>
