@@ -3,11 +3,11 @@
     <div class="icon-container" @click.stop="addToCart">
       <i class="fas fa-basket-shopping"></i>
     </div>
-    <img :src="image" alt="Product image" class="card-image" />
-    <div class="card-body">
-      <h2 class="card-title">{{ title }}</h2>
-      <p class="card-category">{{ category }}</p>
-      <p class="card-price">{{ formatCurrency(price) }}</p>
+    <img :src="image" alt="Product image" class="w-full h-1/2 object-cover" />
+    <div class="w-full h-2/4 flex flex-col items-center justify-center p-10">
+      <p class="text-base font-semibold mb-4">{{ title }}</p>
+      <p class="text-lg text-gray-500 mb-2">{{ category }}</p>
+      <p class="text-sm text-gray-600">{{ formatCurrency(price) }}</p>
     </div>
   </div>
 </template>
@@ -64,39 +64,6 @@ const addToCart = () => {
 
 .card:hover {
   transform: translateY(-4px);
-}
-
-.card-image {
-  width: 100%;
-  height: 50%;
-  object-fit: cover;
-}
-
-.card-body {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-}
-
-.card-title {
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.card-category {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 8px;
-}
-
-.card-price {
-  font-size: 0.875rem;
-  color: #4a5568;
 }
 
 .icon-container {

@@ -1,7 +1,7 @@
 <template>
   <nav>
-    <div class="navbar-container">
-      <div class="backbtn-container">
+    <div class="navbar-container items-center justify-center relative">
+      <div class="backbtn-container absolute inset-2.5">
         <i class="fas fa-arrow-left backbtn" @click="goBack"></i>
       </div>
       <ul class="menu">
@@ -55,7 +55,7 @@ nav {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgb(192, 203, 240);
+  background-color: white;
   padding: 30px 20px;
   z-index: 1000;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -63,14 +63,6 @@ nav {
 
 .navbar-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.backbtn-container {
-  position: absolute;
-  left: 10px;
 }
 
 nav ul.menu {
