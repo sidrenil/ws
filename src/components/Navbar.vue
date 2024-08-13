@@ -51,6 +51,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("update-cart", updateCartItemCount);
 });
 </script>
+
 <style>
 nav {
   position: fixed;

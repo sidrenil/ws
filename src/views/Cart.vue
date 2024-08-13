@@ -10,6 +10,9 @@
             <p>{{ item.category }}</p>
             <p>{{ formatCurrency(item.price) }}</p>
           </div>
+          <button @click="removeItem(index)" class="remove-button">
+            Remove
+          </button>
         </li>
       </ul>
     </div>
@@ -31,6 +34,11 @@ const formatCurrency = (value) => {
 onMounted(() => {
   cart.value = JSON.parse(localStorage.getItem("cart")) || [];
 });
+
+const removeItem = (index) => {
+  cart.value.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart.value));
+};
 </script>
 
 <style scoped>
@@ -61,5 +69,19 @@ onMounted(() => {
 .cart-item-details p {
   font-size: 0.9rem;
   color: #4a5568;
+}
+
+.remove-button {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.remove-button:hover {
+  background-color: #ff4b4b;
 }
 </style>

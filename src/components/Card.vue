@@ -39,9 +39,11 @@ const addToCart = () => {
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
+
   emit("update-cart");
 };
 </script>
+
 <style>
 .card {
   position: relative;
