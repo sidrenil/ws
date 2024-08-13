@@ -17,7 +17,7 @@
       </ul>
     </div>
     <div v-else>
-      <p>Your cart is currently empty.</p>
+      <p>Your basket is currently empty.</p>
     </div>
 
     <div v-if="showAlert" class="alert-message">

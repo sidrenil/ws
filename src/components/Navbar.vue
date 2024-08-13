@@ -11,7 +11,7 @@
         <li><button @click="logout" class="text-xl">Log-Out</button></li>
       </ul>
       <div class="cart-container">
-        <router-link to="/cart">
+        <router-link to="/basket">
           <i class="fa-solid fa-cart-shopping cartshp"></i>
           <span v-if="cartItemCount > 0" class="cart-count">{{
             cartItemCount
