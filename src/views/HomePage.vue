@@ -10,6 +10,7 @@
         :title="product.title"
         :price="product.price"
         :category="product.category"
+        @update-cart="updateCartItemCount"
         @click="goToDetail(product.id)"
       />
     </div>
@@ -21,6 +22,11 @@ import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import Card from "../components/Card.vue";
 import { useRouter } from "vue-router";
+
+const updateCartItemCount = () => {
+  const event = new CustomEvent("update-cart");
+  window.dispatchEvent(event);
+};
 
 const products = ref([]);
 const categories = ref([]);

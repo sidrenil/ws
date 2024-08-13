@@ -10,24 +10,47 @@
         <li><router-link to="/" class="text-xl">Profile</router-link></li>
         <li><button @click="logout" class="text-xl">Log-Out</button></li>
       </ul>
-      <router-link to="/cart">
-        <i class="fa-solid fa-cart-shopping cartshp"></i>
-      </router-link>
+      <div class="cart-container">
+        <router-link to="/cart">
+          <i class="fa-solid fa-cart-shopping cartshp"></i>
+          <span v-if="cartItemCount > 0" class="cart-count">{{
+            cartItemCount
+          }}</span>
+        </router-link>
+      </div>
     </div>
   </nav>
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
+
 const router = useRouter();
 const goBack = () => {
   router.back();
 };
+
 function logout() {
   console.log("successfully exited");
 }
-</script>
 
+const cartItemCount = ref(0);
+
+const updateCartItemCount = () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cartItemCount.value = cart.length;
+};
+
+onMounted(() => {
+  updateCartItemCount();
+  window.addEventListener("update-cart", updateCartItemCount);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("update-cart", updateCartItemCount);
+});
+</script>
 <style>
 nav {
   position: fixed;
@@ -82,9 +105,14 @@ button {
   border: none;
   cursor: pointer;
 }
+
+.cart-container {
+  position: relative;
+  margin-right: 40px;
+}
+
 .cartshp {
-  margin-right: 30px;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: #007bff;
   cursor: pointer;
   transition: transform 0.2s, color 0.2s;
@@ -93,5 +121,16 @@ button {
 .cartshp:hover {
   transform: scale(1.1);
   color: #0056b3;
+}
+
+.cart-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 8px;
+  font-size: 0.75rem;
 }
 </style>

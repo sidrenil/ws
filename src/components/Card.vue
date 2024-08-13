@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="icon-container" @click="addToCart">
+    <div class="icon-container" @click.stop="addToCart">
       <i class="fas fa-basket-shopping"></i>
     </div>
     <img :src="image" alt="Product image" class="card-image" />
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   image: String,
@@ -22,9 +22,12 @@ const props = defineProps({
   category: String,
 });
 
+const emit = defineEmits(["update-cart"]);
+
 const formatCurrency = (value) => {
   return `$${parseFloat(value).toFixed(2)}`;
 };
+
 const addToCart = () => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -36,11 +39,9 @@ const addToCart = () => {
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert(`${props.title} has been added to your cart!`);
+  emit("update-cart");
 };
 </script>
-
 <style>
 .card {
   position: relative;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Your Cart</h1>
+    <h1>Cart</h1>
     <div v-if="cart.length > 0">
       <ul>
         <li v-for="(item, index) in cart" :key="index" class="cart-item">
