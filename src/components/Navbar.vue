@@ -24,8 +24,15 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const cartItemCount = ref(0);
+
+const goBack = () => {
+  router.back();
+};
 
 const updateCartItemCount = () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];

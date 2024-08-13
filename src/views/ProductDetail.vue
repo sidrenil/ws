@@ -15,16 +15,26 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
+import { useCartStore } from "@/stores/cartStore";
 
 const route = useRoute();
 const product = ref(null);
+const cartStore = useCartStore();
 
 const formatCurrency = (value) => {
   return `$${parseFloat(value).toFixed(2)}`;
 };
 
 const addToCart = () => {
-  console.log("Product added to cart:", product.value);
+  if (product.value) {
+    cartStore.addToCart({
+      image: product.value.image,
+      title: product.value.title,
+      price: product.value.price,
+      category: product.value.category,
+    });
+    console.log("Product added to cart:", product.value);
+  }
 };
 
 onMounted(() => {
