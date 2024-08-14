@@ -23,9 +23,11 @@
           </button>
         </li>
       </ul>
-    </div>
-    <div v-else>
-      <p>Your basket is currently empty.</p>
+      <div class="button-container">
+        <button @click="emptyCart" class="empty-cart-button">
+          Empty Basket
+        </button>
+      </div>
     </div>
 
     <div v-if="showAlert" class="alert-message">
@@ -36,10 +38,12 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 const cart = ref([]);
 const showAlert = ref(false);
 const alertMessage = ref("");
+const router = useRouter();
 
 const formatCurrency = (value) => {
   return `$${parseFloat(value).toFixed(2)}`;
@@ -59,6 +63,20 @@ const removeItem = (index) => {
   showAlert.value = true;
   setTimeout(() => {
     showAlert.value = false;
+  }, 3000);
+};
+
+const emptyCart = () => {
+  cart.value = [];
+  localStorage.setItem("cart", JSON.stringify(cart.value));
+  window.dispatchEvent(new CustomEvent("update-cart"));
+
+  alertMessage.value = "Your basket has been successfully emptied";
+  showAlert.value = true;
+
+  setTimeout(() => {
+    showAlert.value = false;
+    router.push({ name: "HomePage" });
   }, 3000);
 };
 </script>
@@ -107,12 +125,32 @@ const removeItem = (index) => {
   background-color: #ff4b4b;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.empty-cart-button {
+  background-color: #f56565;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.empty-cart-button:hover {
+  background-color: #e53e3e;
+}
+
 .alert-message {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #f57979;
+  background-color: #6beca1;
   color: white;
   padding: 15px;
   border-radius: 5px;
