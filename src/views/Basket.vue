@@ -75,7 +75,7 @@ const removeItem = (index) => {
 .cart-item-image {
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   margin-right: 15px;
 }
 
