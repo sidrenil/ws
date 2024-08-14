@@ -6,16 +6,27 @@
       </div>
       <ul class="menu">
         <li><router-link to="/" class="text-xl">Home Page</router-link></li>
-        <li><router-link to="/" class="text-xl">Categories</router-link></li>
-        <li><router-link to="/" class="text-xl">Profile</router-link></li>
+        <li class="relative">
+          <button @click="toggleDropdown" class="text-xl">Categories</button>
+          <ul v-if="dropdownOpen" class="dropdown-menu">
+            <li v-for="(category, index) in uniqueCategories" :key="index">
+              <router-link :to="`/category/${category}`">
+                {{ category }}
+              </router-link>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <router-link to="/profile" class="text-xl">Profile</router-link>
+        </li>
         <li><button @click="logout" class="text-xl">Log-Out</button></li>
       </ul>
       <div class="cart-container">
         <router-link to="/basket">
           <i class="fa-solid fa-cart-shopping cartshp"></i>
-          <span v-if="cartItemCount > 0" class="cart-count">{{
-            cartItemCount
-          }}</span>
+          <span v-if="cartItemCount > 0" class="cart-count">
+            {{ cartItemCount }}
+          </span>
         </router-link>
       </div>
     </div>
@@ -23,30 +34,47 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
 const cartItemCount = ref(0);
+const categories = ref([]);
+const dropdownOpen = ref(false);
 
 const goBack = () => {
   router.back();
 };
 
 const showBackButton = computed(() => route.name !== "HomePage");
+
 const updateCartItemCount = () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cartItemCount.value = cart.length;
 };
 
+const fetchCategories = async () => {
+  try {
+    const response = await fetch("https://dummyjson.com/products");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const allCategories = data.products.map((product) => product.category);
+    categories.value = [...new Set(allCategories)]; // Unique categories
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+  }
+};
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
 onMounted(() => {
   updateCartItemCount();
-  window.addEventListener("update-cart", updateCartItemCount);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("update-cart", updateCartItemCount);
+  fetchCategories();
 });
 </script>
 
@@ -77,6 +105,7 @@ nav ul.menu {
 
 nav ul.menu li {
   margin: 0 15px;
+  position: relative;
 }
 
 .backbtn {
@@ -123,5 +152,30 @@ button {
   border-radius: 50%;
   padding: 3px 8px;
   font-size: 0.75rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  list-style-type: none;
+  padding: 10px;
+  margin: 0;
+  z-index: 1000;
+}
+
+.dropdown-menu li {
+  padding: 5px 10px;
+}
+
+.dropdown-menu li a {
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-menu li a:hover {
+  text-decoration: underline;
 }
 </style>
