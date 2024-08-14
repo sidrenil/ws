@@ -1,12 +1,23 @@
 <template>
-  <div v-if="product" class="product-detail p-5">
-    <img :src="product.image" alt="Product image" class="product-image" />
+  <div v-if="product" class="product-detail">
+    <div class="product-image-container">
+      <img
+        :src="
+          product.images && product.images.length > 0
+            ? product.images[0]
+            : 'path/to/default-image.png'
+        "
+        alt="Product image"
+        class="product-image"
+      />
+    </div>
     <div class="product-info">
       <h1 class="product-title">{{ product.title }}</h1>
+      <p class="product-description">{{ product.description }}</p>
       <p class="product-price">{{ formatCurrency(product.price) }}</p>
+
+      <button @click="addToCart" class="add-to-cart-button">Add to Cart</button>
     </div>
-    <p class="product-description">{{ product.description }}</p>
-    <button @click="addToCart" class="add-to-cart-button">Add to Cart</button>
   </div>
   <div v-else class="loading">Loading product details...</div>
 </template>
@@ -28,13 +39,15 @@ const formatCurrency = (value) => {
 const addToCart = () => {
   if (product.value) {
     cartStore.addToCart({
-      image: product.value.image,
+      image:
+        product.value.images && product.value.images.length > 0
+          ? product.value.images[0]
+          : "path/to/default-image.png",
       title: product.value.title,
       price: product.value.price,
       category: product.value.category,
     });
 
-    // Dispatch custom event to update cart count
     window.dispatchEvent(new CustomEvent("update-cart"));
 
     console.log("Product added to cart:", product.value);
@@ -55,40 +68,52 @@ onMounted(() => {
 
 <style>
 .product-detail {
-  max-width: 600px;
+  display: flex;
+  max-width: 1200px;
   margin: auto;
+  padding: 20px;
+  gap: 20px;
+  text-align: center;
+}
+
+.product-image-container {
+  flex: 1;
 }
 
 .product-image {
   width: 100%;
   height: auto;
-  margin-top: 100px;
+  object-fit: cover;
+  margin-top: 20px;
 }
 
 .product-info {
-  text-align: center;
-  margin-top: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: start;
 }
 
 .product-title {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .product-price {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: #4a5568;
-  margin: 10px 0;
+  margin: 20px 0;
 }
 
 .product-description {
-  margin-top: 20px;
+  font-size: 1rem;
+  margin: 20px 0;
   line-height: 1.6;
 }
 
 .add-to-cart-button {
-  display: block;
-  width: 100%;
   padding: 10px;
   font-size: 1rem;
   color: white;
@@ -96,7 +121,6 @@ onMounted(() => {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 20px;
   transition: background-color 0.3s;
 }
 
@@ -105,7 +129,6 @@ onMounted(() => {
 }
 
 .loading {
-  margin-top: 25px;
   text-align: center;
   padding: 20px;
   font-size: 1.25rem;

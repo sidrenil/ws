@@ -1,16 +1,29 @@
 <template>
   <div>
     <h1>Basket</h1>
-    <div v-if="cart.length > 0">
+    <div v-if="groupedCartItems.length > 0">
       <ul>
-        <li v-for="(item, index) in cart" :key="index" class="cart-item">
-          <img :src="item.image" alt="Product image" class="cart-item-image" />
+        <li
+          v-for="(item, index) in groupedCartItems"
+          :key="index"
+          class="cart-item"
+        >
+          <img
+            :src="
+              item.image && item.image.length > 0
+                ? item.image
+                : 'path/to/default-image.png'
+            "
+            alt="Product image"
+            class="cart-item-image"
+          />
           <div class="cart-item-details">
             <h2>{{ item.title }}</h2>
             <p>{{ item.category }}</p>
             <p>{{ formatCurrency(item.price) }}</p>
+            <p class="item-quantity">Quantity: {{ item.quantity }}</p>
           </div>
-          <button @click="removeItem(index)" class="remove-button">
+          <button @click="removeItem(item.id)" class="remove-button">
             Remove
           </button>
         </li>
@@ -27,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const cart = ref([]);
 const showAlert = ref(false);
@@ -38,21 +51,36 @@ const formatCurrency = (value) => {
 };
 
 onMounted(() => {
-  cart.value = JSON.parse(localStorage.getItem("cart")) || [];
+  const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.value = groupCartItems(storedCart);
 });
 
-const removeItem = (index) => {
-  const removedItem = cart.value[index];
-  cart.value.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart.value));
+const groupCartItems = (cartItems) => {
+  const groupedItems = {};
+  cartItems.forEach((item) => {
+    if (groupedItems[item.id]) {
+      groupedItems[item.id].quantity += 1;
+    } else {
+      groupedItems[item.id] = { ...item, quantity: 1 };
+    }
+  });
+  return Object.values(groupedItems);
+};
+
+const removeItem = (itemId) => {
+  const updatedCart = cart.value.filter((item) => item.id !== itemId);
+  cart.value = updatedCart;
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
   window.dispatchEvent(new CustomEvent("update-cart"));
 
-  alertMessage.value = `${removedItem.title} has been removed from your basket`;
+  alertMessage.value = `Item has been removed from your basket`;
   showAlert.value = true;
   setTimeout(() => {
     showAlert.value = false;
   }, 3000);
 };
+
+const groupedCartItems = computed(() => cart.value);
 </script>
 
 <style scoped>
@@ -83,6 +111,12 @@ const removeItem = (index) => {
 .cart-item-details p {
   font-size: 0.9rem;
   color: #4a5568;
+}
+
+.item-quantity {
+  font-size: 0.9rem;
+  color: #2d3748;
+  margin-top: 5px;
 }
 
 .remove-button {

@@ -4,21 +4,13 @@
       <div class="icon-container" @click.stop="addToCart">
         <i class="fas fa-basket-shopping"></i>
       </div>
-      <img
-        :src="image"
-        alt="Product image"
-        class="w-full h-1/2 object-cover card-image"
-      />
-      <div class="w-full flex flex-col items-center justify-center p-4">
-        <p class="text-base font-semibold mb-1 text-center w-full truncate">
-          {{ title }}
-        </p>
-        <p class="text-lg text-gray-500 mb-1 text-center w-full truncate">
-          {{ category }}
-        </p>
-        <p class="text-sm text-gray-600 text-center w-full truncate">
-          {{ formatCurrency(price) }}
-        </p>
+      <div class="image-wrapper">
+        <img :src="image" alt="Product image" class="card-image" />
+      </div>
+      <div class="card-content">
+        <p class="card-title">{{ title }}</p>
+        <p class="card-category">{{ category }}</p>
+        <p class="card-price">{{ formatCurrency(price) }}</p>
       </div>
     </div>
 
@@ -67,7 +59,7 @@ const addToCart = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .card {
   position: relative;
   cursor: pointer;
@@ -82,7 +74,8 @@ const addToCart = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
 }
 
 .card:hover {
@@ -116,6 +109,62 @@ const addToCart = () => {
   font-size: 1.2rem;
 }
 
+.image-wrapper {
+  width: 80%;
+  height: 50%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.card-content {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.card-title,
+.card-category,
+.card-price {
+  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding: 5px 15px;
+  box-sizing: border-box;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  height: 50px;
+  line-height: 1.3;
+  overflow: visible;
+  padding: 30px 6px;
+}
+
+.card-category {
+  font-size: 1rem;
+  color: #4a5568;
+  padding: 30px 0;
+}
+
+.card-price {
+  font-size: 0.9rem;
+  color: #2d3748;
+  margin-top: auto;
+}
+
 .alert-message {
   position: fixed;
   top: 50%;
@@ -127,10 +176,5 @@ const addToCart = () => {
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   z-index: 1000;
-}
-.card-image {
-  width: 50%;
-  height: 50%;
-  object-fit: contain;
 }
 </style>
