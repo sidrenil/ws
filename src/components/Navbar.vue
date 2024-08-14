@@ -1,7 +1,7 @@
 <template>
   <nav>
     <div class="navbar-container items-center justify-center relative">
-      <div class="backbtn-container absolute inset-2.5">
+      <div v-if="showBackButton" class="backbtn-container absolute inset-2.5">
         <i class="fas fa-arrow-left backbtn" @click="goBack"></i>
       </div>
       <ul class="menu">
@@ -23,17 +23,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
-
+const route = useRoute();
 const cartItemCount = ref(0);
 
 const goBack = () => {
   router.back();
 };
 
+const showBackButton = computed(() => route.name !== "HomePage");
 const updateCartItemCount = () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cartItemCount.value = cart.length;

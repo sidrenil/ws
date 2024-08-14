@@ -4,7 +4,7 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import Basket from "../views/Basket.vue";
 
 const routes = [
-  { path: "/", component: HomePage },
+  { path: "/", name: "HomePage", component: HomePage },
   {
     path: "/product/:id",
     name: "ProductDetail",
