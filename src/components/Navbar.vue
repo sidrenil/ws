@@ -34,25 +34,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useCartStore } from "@/stores/cartStore";
 
 const router = useRouter();
 const route = useRoute();
-const cartItemCount = ref(0);
+const cartStore = useCartStore();
+
 const categories = ref([]);
 const dropdownOpen = ref(false);
+
+const cartItemCount = computed(() => cartStore.cartItemCount);
 
 const goBack = () => {
   router.back();
 };
 
 const showBackButton = computed(() => route.name !== "HomePage");
-
-const updateCartItemCount = () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cartItemCount.value = cart.length;
-};
 
 const fetchCategories = async () => {
   try {
@@ -70,17 +69,33 @@ const fetchCategories = async () => {
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
-  console.log("Dropdown State:", dropdownOpen.value);
 };
 
 const closeDropdown = () => {
   dropdownOpen.value = false;
 };
 
+const updateCartItemCount = () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cartStore.cart = cart;
+};
+
 onMounted(() => {
   updateCartItemCount();
+  window.addEventListener("update-cart", updateCartItemCount);
   fetchCategories();
 });
+
+onBeforeUnmount(() => {
+  window.removeEventListener("update-cart", updateCartItemCount);
+});
+
+watch(
+  () => cartStore.cart,
+  () => {
+    cartItemCount.value = cartStore.cart.length;
+  }
+);
 </script>
 
 <style>
