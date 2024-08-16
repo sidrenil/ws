@@ -62,11 +62,14 @@ const fetchCategories = async () => {
     }
     const data = await response.json();
     const allCategories = data.products.map((product) => product.category);
-    categories.value = [...new Set(allCategories)]; // Unique categories
+    categories.value = [...new Set(allCategories)];
   } catch (error) {
     console.error("Failed to fetch categories:", error);
   }
 };
+
+// `uniqueCategories` computed özelliği burada tanımlanıyor
+const uniqueCategories = computed(() => categories.value);
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
