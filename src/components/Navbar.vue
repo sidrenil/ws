@@ -9,8 +9,8 @@
         <li class="relative">
           <button @click="toggleDropdown" class="text-xl">Categories</button>
           <ul v-if="dropdownOpen" class="dropdown-menu">
-            <li v-for="(category, index) in uniqueCategories" :key="index">
-              <router-link :to="`/category/${category}`">
+            <li v-for="(category, index) in categories" :key="index">
+              <router-link :to="`/category/${category}`" @click="closeDropdown">
                 {{ category }}
               </router-link>
             </li>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
@@ -68,11 +68,13 @@ const fetchCategories = async () => {
   }
 };
 
-// `uniqueCategories` computed özelliği burada tanımlanıyor
-const uniqueCategories = computed(() => categories.value);
-
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
+  console.log("Dropdown State:", dropdownOpen.value);
+};
+
+const closeDropdown = () => {
+  dropdownOpen.value = false;
 };
 
 onMounted(() => {

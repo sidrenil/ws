@@ -1,53 +1,46 @@
 <template>
-  <div>
-    <h1>{{ category }} Products</h1>
-    <div v-if="loading">Loading...</div>
-    <div v-else>
-      <div v-if="products.length > 0">
-        <ul>
-          <li v-for="product in products" :key="product.id">
-            <img :src="product.thumbnail" alt="Product Image" />
-            <h2>{{ product.title }}</h2>
-            <p>{{ product.description }}</p>
-            <p>Price: ${{ product.price }}</p>
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <p>No products found in this category.</p>
-      </div>
+  <div class="category-page">
+    <h2>{{ category }} products</h2>
+    <div
+      class="card-container grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+    >
+      <Card
+        v-for="product in filteredProducts"
+        :key="product.id"
+        :image="
+          product.images && product.images.length > 0
+            ? product.images[0]
+            : 'path/to/default-image.png'
+        "
+        :title="product.title"
+        :price="product.price"
+        :category="product.category"
+        @update-cart="updateCartItemCount"
+        @click="goToDetail(product.id)"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, onMounted, watch } from "vue";
+import axios from "axios";
+import Card from "../components/Card.vue";
+import { useRouter, useRoute } from "vue-router";
 
-const route = useRoute();
-const category = ref(route.params.category);
-const products = ref([]);
-const loading = ref(true);
-
-const fetchProductsByCategory = async () => {
-  loading.value = true;
-  try {
-    const response = await fetch(
-      `https://dummyjson.com/products/category/${category.value}`
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    products.value = data.products;
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-  } finally {
-    loading.value = false;
-  }
+const updateCartItemCount = () => {
+  const event = new CustomEvent("update-cart");
+  window.dispatchEvent(event);
 };
 
+const products = ref([]);
+const category = ref(null);
+
+const router = useRouter();
+const route = useRoute();
+
 onMounted(() => {
+  category.value = route.params.category;
   fetchProductsByCategory();
 });
 
@@ -58,31 +51,39 @@ watch(
     fetchProductsByCategory();
   }
 );
+
+const fetchProductsByCategory = async () => {
+  try {
+    const response = await axios.get(
+      `https://dummyjson.com/products/category/${category.value}`
+    );
+    products.value = response.data.products;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+  }
+};
+
+const filteredProducts = computed(() => {
+  return products.value;
+});
+
+const goToDetail = (productId) => {
+  router.push({ name: "ProductDetail", params: { id: productId } });
+};
 </script>
 
-<style scoped>
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-li {
-  border: 1px solid #ddd;
+<style>
+.category-page {
   padding: 20px;
-  text-align: center;
+  margin-top: 50px;
 }
 
-img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
+.card-container {
+  margin-top: 70px;
+  margin: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
 }
 </style>
