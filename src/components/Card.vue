@@ -116,12 +116,15 @@ const addToCart = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .card-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: all 0.3s ease-in-out;
 }
 
 .card-content {
@@ -142,6 +145,7 @@ const addToCart = () => {
   margin: 0;
   padding: 5px 15px;
   box-sizing: border-box;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .card-title {
@@ -176,5 +180,23 @@ const addToCart = () => {
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   z-index: 1000;
+}
+
+.card:hover .image-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.card:hover .card-image {
+  object-fit: contain;
+}
+
+.card:hover .card-content {
+  opacity: 0;
+}
+
+.card:hover .card-content * {
+  display: none;
 }
 </style>
