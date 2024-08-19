@@ -77,7 +77,7 @@ const emptyCart = () => {
   setTimeout(() => {
     showAlert.value = false;
     router.push({ name: "HomePage" });
-  }, 3000);
+  }, 2000);
 };
 </script>
 

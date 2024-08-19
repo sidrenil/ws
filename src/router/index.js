@@ -3,6 +3,7 @@ import HomePage from "@/views/HomePage.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import Basket from "../views/Basket.vue";
 import CategoryPage from "@/views/CategoryPage.vue";
+import Profile from "../views/Profile.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -22,6 +23,11 @@ const routes = [
     name: "CategoryPage",
     component: CategoryPage,
     props: true,
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
   },
 ];
 
