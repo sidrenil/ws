@@ -1,6 +1,10 @@
 <template>
   <div class="login-container">
-    <div class="login-section">
+    <div
+      class="login-section"
+      :class="{ active: isActive === 'login' }"
+      @click="setActive('login')"
+    >
       <h2>Login</h2>
       <form @submit.prevent="login">
         <div class="form-group">
@@ -20,7 +24,11 @@
       </form>
     </div>
 
-    <div class="signup-section">
+    <div
+      class="signup-section"
+      :class="{ active: isActive === 'signup' }"
+      @click="setActive('signup')"
+    >
       <h2>Sign Up</h2>
       <form @submit.prevent="signup">
         <div class="form-group">
@@ -61,19 +69,37 @@ export default {
       signupName: "",
       signupEmail: "",
       signupPassword: "",
+      isActive: "",
     };
   },
   methods: {
+    setActive(section) {
+      this.isActive = section;
+    },
     login() {
-      console.log("Giriş yapıldı:", this.loginEmail, this.loginPassword);
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users.find(
+        (u) => u.email === this.loginEmail && u.password === this.loginPassword
+      );
+      if (user) {
+        this.$router.push("/");
+      } else {
+        alert("Invalid email or password");
+      }
     },
     signup() {
-      console.log(
-        "Kayıt olundu:",
-        this.signupName,
-        this.signupEmail,
-        this.signupPassword
-      );
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      if (users.some((user) => user.email === this.signupEmail)) {
+        alert("Email already registered. Please log in.");
+        return;
+      }
+      users.push({
+        name: this.signupName,
+        email: this.signupEmail,
+        password: this.signupPassword,
+      });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Registration successful. You can now log in.");
     },
   },
 };
@@ -94,6 +120,8 @@ export default {
   align-items: center;
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  transition: background-color 0.3s;
 }
 
 .login-section {
@@ -101,7 +129,7 @@ export default {
 }
 
 .signup-section {
-  background-color: #ffffff;
+  background-color: #f5f5f5;
 }
 
 h2 {
@@ -145,5 +173,18 @@ h2 {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.login-section,
+.signup-section {
+  background-color: #ffffff;
+}
+
+.login-section:not(.active) {
+  background-color: #f5f5f5;
+}
+
+.signup-section:not(.active) {
+  background-color: #f5f5f5;
 }
 </style>
