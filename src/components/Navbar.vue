@@ -1,33 +1,46 @@
 <template>
   <nav>
-    <div class="navbar-container items-center justify-center relative">
-      <div v-if="showBackButton" class="backbtn-container absolute inset-2.5">
-        <i class="fas fa-arrow-left backbtn" @click="goBack"></i>
+    <div class="navbar-container items-center justify-between relative">
+      <div class="menu-container">
+        <ul class="menu">
+          <li><router-link to="/" class="text-xl">Home Page</router-link></li>
+          <li class="relative">
+            <button @click="toggleDropdown" class="text-xl">Categories</button>
+            <ul v-if="dropdownOpen" class="dropdown-menu">
+              <li v-for="(category, index) in categories" :key="index">
+                <router-link
+                  :to="`/category/${category}`"
+                  @click="closeDropdown"
+                >
+                  {{ category }}
+                </router-link>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <router-link to="/profile" class="text-xl">Profile</router-link>
+          </li>
+        </ul>
       </div>
-      <ul class="menu">
-        <li><router-link to="/" class="text-xl">Home Page</router-link></li>
-        <li class="relative">
-          <button @click="toggleDropdown" class="text-xl">Categories</button>
-          <ul v-if="dropdownOpen" class="dropdown-menu">
-            <li v-for="(category, index) in categories" :key="index">
-              <router-link :to="`/category/${category}`" @click="closeDropdown">
-                {{ category }}
-              </router-link>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <router-link to="/profile" class="text-xl">Profile</router-link>
-        </li>
-        <li><button @click="logout" class="text-xl">Log-Out</button></li>
-      </ul>
-      <div class="cart-container">
-        <router-link to="/basket">
-          <i class="fa-solid fa-cart-shopping cartshp"></i>
-          <span v-if="cartItemCount > 0" class="cart-count">
-            {{ cartItemCount }}
-          </span>
-        </router-link>
+
+      <div class="right-container">
+        <div class="auth-buttons">
+          <router-link to="/login">
+            <i class="fa-solid fa-right-to-bracket btn">Login</i>
+          </router-link>
+          <i @click="logout" class="fa-solid fa-right-from-bracket btn"
+            >Log-Out</i
+          >
+        </div>
+
+        <div class="cart-container">
+          <router-link to="/basket">
+            <i class="fa-solid fa-cart-shopping cartshp"></i>
+            <span v-if="cartItemCount > 0" class="cart-count">
+              {{ cartItemCount }}
+            </span>
+          </router-link>
+        </div>
       </div>
     </div>
   </nav>
@@ -112,6 +125,12 @@ nav {
 
 .navbar-container {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-container {
+  flex: 1;
 }
 
 nav ul.menu {
@@ -128,6 +147,21 @@ nav ul.menu li {
   position: relative;
 }
 
+.right-container {
+  display: flex;
+  align-items: center;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.auth-buttons i {
+  margin-right: 10px;
+}
+
 .backbtn {
   font-size: 1.5rem;
   color: #007bff;
@@ -139,11 +173,17 @@ nav ul.menu li {
   transform: scale(1.1);
   color: #0056b3;
 }
-
 button {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: smaller;
 }
 
 .cart-container {

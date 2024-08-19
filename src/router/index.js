@@ -4,6 +4,7 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import Basket from "../views/Basket.vue";
 import CategoryPage from "@/views/CategoryPage.vue";
 import Profile from "../views/Profile.vue";
+import LoginPage from "../views/LoginPage.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -28,6 +29,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/login",
+    name: "LoginPage",
+    component: LoginPage,
   },
 ];
 
