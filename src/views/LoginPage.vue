@@ -82,7 +82,7 @@ const login = () => {
     localStorage.setItem("currentUserEmail", user.email);
     alertMessage.value = "Login successful!";
     setTimeout(() => {
-      router.push("/profile");
+      router.push("/");
     }, 3000);
   } else {
     alertMessage.value = "Invalid email or password";

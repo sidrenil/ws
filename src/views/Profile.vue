@@ -82,7 +82,6 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding-top: 50px;
   background-color: #f5f5f5;
 }
 
