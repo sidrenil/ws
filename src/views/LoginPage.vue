@@ -59,49 +59,49 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "Login",
-  data() {
-    return {
-      loginEmail: "",
-      loginPassword: "",
-      signupName: "",
-      signupEmail: "",
-      signupPassword: "",
-      isActive: "",
-    };
-  },
-  methods: {
-    setActive(section) {
-      this.isActive = section;
-    },
-    login() {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const user = users.find(
-        (u) => u.email === this.loginEmail && u.password === this.loginPassword
-      );
-      if (user) {
-        this.$router.push("/");
-      } else {
-        alert("Invalid email or password");
-      }
-    },
-    signup() {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      if (users.some((user) => user.email === this.signupEmail)) {
-        alert("Email already registered. Please log in.");
-        return;
-      }
-      users.push({
-        name: this.signupName,
-        email: this.signupEmail,
-        password: this.signupPassword,
-      });
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("Registration successful. You can now log in.");
-    },
-  },
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const loginEmail = ref("");
+const loginPassword = ref("");
+const isActive = ref("login");
+const alertMessage = ref("");
+const router = useRouter();
+
+const setActive = (section) => {
+  isActive.value = section;
+};
+
+const login = () => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find(
+    (u) => u.email === loginEmail.value && u.password === loginPassword.value
+  );
+  if (user) {
+    localStorage.setItem("currentUserEmail", user.email);
+    alertMessage.value = "Login successful!";
+    setTimeout(() => {
+      router.push("/profile");
+    }, 3000);
+  } else {
+    alertMessage.value = "Invalid email or password";
+  }
+};
+
+const signup = () => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  if (users.some((user) => user.email === signupEmail.value)) {
+    alertMessage.value = "Email already registered. Please log in.";
+    return;
+  }
+  users.push({
+    name: signupName.value,
+    email: signupEmail.value,
+    password: signupPassword.value,
+  });
+  localStorage.setItem("users", JSON.stringify(users));
+  alertMessage.value = "Registration successful. You can now log in.";
 };
 </script>
 
