@@ -23,7 +23,6 @@
         <button type="submit" class="btn">Login</button>
       </form>
     </div>
-
     <div
       class="signup-section"
       :class="{ active: isActive === 'signup' }"
@@ -58,70 +57,53 @@
     </div>
   </div>
 </template>
-
-<script>
+<script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-
-export default {
-  name: "LoginPage",
-  data() {
-    return {
-      loginEmail: "",
-      loginPassword: "",
-      signupName: "",
-      signupEmail: "",
-      signupPassword: "",
-      isActive: "",
-    };
-  },
-  methods: {
-    setActive(section) {
-      this.isActive = section;
-    },
-    login() {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const user = users.find(
-        (u) => u.email === this.loginEmail && u.password === this.loginPassword
-      );
-      if (user) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        this.$router.push("/");
-      } else {
-        alert("Invalid email or password");
-      }
-    },
-    signup() {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      if (users.some((user) => user.email === this.signupEmail)) {
-        alert("Email already registered. Please log in.");
-        return;
-      }
-      const newUser = {
-        name: this.signupName,
-        email: this.signupEmail,
-        password: this.signupPassword,
-      };
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("Registration successful. You can now log in.");
-      this.setActive("login");
-    },
-  },
-  created() {
-    if (localStorage.getItem("isLoggedIn") === "true") {
-      this.$router.push("/profile");
-    }
-  },
+const loginEmail = ref("");
+const loginPassword = ref("");
+const isActive = ref("login");
+const alertMessage = ref("");
+const router = useRouter();
+const setActive = (section) => {
+  isActive.value = section;
+};
+const login = () => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find(
+    (u) => u.email === loginEmail.value && u.password === loginPassword.value
+  );
+  if (user) {
+    localStorage.setItem("currentUserEmail", user.email);
+    alertMessage.value = "Login successful!";
+    setTimeout(() => {
+      router.push("/profile");
+      router.push("/");
+    }, 3000);
+  } else {
+    alertMessage.value = "Invalid email or password";
+  }
+};
+const signup = () => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  if (users.some((user) => user.email === signupEmail.value)) {
+    alertMessage.value = "Email already registered. Please log in.";
+    return;
+  }
+  users.push({
+    name: signupName.value,
+    email: signupEmail.value,
+    password: signupPassword.value,
+  });
+  localStorage.setItem("users", JSON.stringify(users));
+  alertMessage.value = "Registration successful. You can now log in.";
 };
 </script>
-
 <style scoped>
 .login-container {
   display: flex;
   height: 100vh;
 }
-
 .login-section,
 .signup-section {
   flex: 1;
@@ -134,33 +116,27 @@ export default {
   background-color: #f5f5f5;
   transition: background-color 0.3s;
 }
-
 .login-section {
   background-color: #f5f5f5;
 }
-
 .signup-section {
   background-color: #f5f5f5;
 }
-
 h2 {
   margin-bottom: 20px;
   font-size: 1.5rem;
   color: #333;
 }
-
 .form-group {
   margin-bottom: 15px;
   width: 100%;
   max-width: 300px;
 }
-
 .form-group label {
   display: block;
   margin-bottom: 5px;
   color: #555;
 }
-
 .form-group input {
   width: 100%;
   padding: 10px;
@@ -168,7 +144,6 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
 .btn {
   width: 100%;
   max-width: 300px;
@@ -181,20 +156,16 @@ h2 {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 .btn:hover {
   background-color: #0056b3;
 }
-
 .login-section,
 .signup-section {
   background-color: #ffffff;
 }
-
 .login-section:not(.active) {
   background-color: #f5f5f5;
 }
-
 .signup-section:not(.active) {
   background-color: #f5f5f5;
 }
