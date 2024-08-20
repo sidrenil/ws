@@ -94,6 +94,9 @@ const updateCartItemCount = () => {
 };
 const logout = () => {
   localStorage.removeItem("currentUser");
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("profileEmail");
+  alert("Successfully exited.");
   router.push("/login");
 };
 
