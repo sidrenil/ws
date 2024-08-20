@@ -92,6 +92,10 @@ const updateCartItemCount = () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cartStore.cart = cart;
 };
+const logout = () => {
+  localStorage.removeItem("currentUser");
+  router.push("/login");
+};
 
 onMounted(() => {
   updateCartItemCount();
