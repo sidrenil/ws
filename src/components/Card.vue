@@ -80,7 +80,7 @@ const addToCart = () => {
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 6px 4px rgb(180, 200, 221);
+  box-shadow: 0 4px 6px 4px rgb(209, 208, 208);
 }
 
 .icon-container {
