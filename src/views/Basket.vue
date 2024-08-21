@@ -1,6 +1,10 @@
 <template>
   <div>
     <h1>Basket</h1>
+    <div v-if="cart.length === 0" class="empty-basket-message">
+      <p>Your basket is empty</p>
+    </div>
+
     <div v-if="cart.length > 0">
       <ul>
         <li v-for="(item, index) in cart" :key="index" class="cart-item">
@@ -30,6 +34,7 @@
       </div>
     </div>
 
+    <!-- Alert message -->
     <div v-if="showAlert" class="alert-message">
       <p>{{ alertMessage }}</p>
     </div>
@@ -156,5 +161,14 @@ const emptyCart = () => {
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   z-index: 1000;
+}
+
+.empty-basket-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.5rem;
+  color: #4a5568;
 }
 </style>
