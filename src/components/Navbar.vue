@@ -15,33 +15,32 @@
       <div class="menu-container">
         <ul class="menu">
           <li><router-link to="/" class="text-xl">Home Page</router-link></li>
-          <li class="relative">
-            <button @click="toggleDropdown" class="text-xl">Categories</button>
+          <li
+            class="relative"
+            @mouseover="dropdownOpen = true"
+            @mouseleave="dropdownOpen = false"
+          >
+            <button class="text-xl">Categories</button>
             <ul v-if="dropdownOpen" class="dropdown-menu">
               <li v-for="(category, index) in categories" :key="index">
-                <router-link
-                  :to="`/category/${category}`"
-                  @click="closeDropdown"
-                >
-                  {{ category }}
-                </router-link>
+                <router-link :to="`/category/${category}`">{{
+                  category
+                }}</router-link>
               </li>
             </ul>
           </li>
-          <li class="relative">
-            <button @click="toggleProfileDropdown" class="text-xl">
-              Profile
-            </button>
+          <li
+            class="relative"
+            @mouseover="profileDropdownOpen = true"
+            @mouseleave="profileDropdownOpen = false"
+          >
+            <button class="text-xl">Profile</button>
             <ul v-if="profileDropdownOpen" class="dropdown-menu">
               <li>
-                <router-link to="/profile" @click="closeProfileDropdown">
-                  Change Password
-                </router-link>
+                <router-link to="/profile">Change Password</router-link>
               </li>
               <li>
-                <router-link to="/login" @click="closeProfileDropdown">
-                  Login
-                </router-link>
+                <router-link to="/login">Login</router-link>
               </li>
               <li>
                 <button @click="logout">Log-Out</button>
@@ -100,22 +99,6 @@ const fetchCategories = async () => {
   }
 };
 
-const toggleDropdown = () => {
-  dropdownOpen.value = !dropdownOpen.value;
-};
-
-const closeDropdown = () => {
-  dropdownOpen.value = false;
-};
-
-const toggleProfileDropdown = () => {
-  profileDropdownOpen.value = !profileDropdownOpen.value;
-};
-
-const closeProfileDropdown = () => {
-  profileDropdownOpen.value = false;
-};
-
 const updateCartItemCount = () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cartStore.cart = cart;
@@ -126,7 +109,7 @@ const logout = () => {
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("profileEmail");
   alert("Successfully exited.");
-  closeProfileDropdown();
+  profileDropdownOpen.value = false;
   router.push("/login");
 };
 
