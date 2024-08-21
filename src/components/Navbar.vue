@@ -1,6 +1,17 @@
 <template>
   <nav>
     <div class="navbar-container items-center justify-between relative">
+      <div class="left-container">
+        <div class="backbtn-container absolute inset-2.5">
+          <div
+            v-if="showBackButton"
+            class="backbtn-container absolute inset-2.5"
+          >
+            <i class="fas fa-arrow-left backbtn" @click="goBack"></i>
+          </div>
+        </div>
+      </div>
+
       <div class="menu-container">
         <ul class="menu">
           <li><router-link to="/" class="text-xl">Home Page</router-link></li>
@@ -17,22 +28,30 @@
               </li>
             </ul>
           </li>
-          <li>
-            <router-link to="/profile" class="text-xl">Profile</router-link>
+          <li class="relative">
+            <button @click="toggleProfileDropdown" class="text-xl">
+              Profile
+            </button>
+            <ul v-if="profileDropdownOpen" class="dropdown-menu">
+              <li>
+                <router-link to="/profile" @click="closeProfileDropdown">
+                  Change Password
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/login" @click="closeProfileDropdown">
+                  Login
+                </router-link>
+              </li>
+              <li>
+                <button @click="logout">Log-Out</button>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
 
       <div class="right-container">
-        <div class="auth-buttons">
-          <router-link to="/login">
-            <i class="fa-solid fa-right-to-bracket btn">Login</i>
-          </router-link>
-          <i @click="logout" class="fa-solid fa-right-from-bracket btn"
-            >Log-Out</i
-          >
-        </div>
-
         <div class="cart-container">
           <router-link to="/basket">
             <i class="fa-solid fa-cart-shopping cartshp"></i>
@@ -57,6 +76,7 @@ const cartStore = useCartStore();
 
 const categories = ref([]);
 const dropdownOpen = ref(false);
+const profileDropdownOpen = ref(false);
 
 const cartItemCount = computed(() => cartStore.cartItemCount);
 
@@ -88,15 +108,25 @@ const closeDropdown = () => {
   dropdownOpen.value = false;
 };
 
+const toggleProfileDropdown = () => {
+  profileDropdownOpen.value = !profileDropdownOpen.value;
+};
+
+const closeProfileDropdown = () => {
+  profileDropdownOpen.value = false;
+};
+
 const updateCartItemCount = () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cartStore.cart = cart;
 };
+
 const logout = () => {
   localStorage.removeItem("currentUser");
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("profileEmail");
   alert("Successfully exited.");
+  closeProfileDropdown();
   router.push("/login");
 };
 
@@ -136,8 +166,15 @@ nav {
   align-items: center;
 }
 
-.menu-container {
+.left-container {
   flex: 1;
+}
+
+.menu-container {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 nav ul.menu {
@@ -155,7 +192,9 @@ nav ul.menu li {
 }
 
 .right-container {
+  flex: 1;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -180,17 +219,11 @@ nav ul.menu li {
   transform: scale(1.1);
   color: #0056b3;
 }
+
 button {
   background: none;
   border: none;
   cursor: pointer;
-}
-
-.btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: smaller;
 }
 
 .cart-container {
@@ -237,12 +270,21 @@ button {
   padding: 5px 10px;
 }
 
-.dropdown-menu li a {
+.dropdown-menu li a,
+.dropdown-menu li button {
   text-decoration: none;
   color: black;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
-.dropdown-menu li a:hover {
+.dropdown-menu li a:hover,
+.dropdown-menu li button:hover {
   text-decoration: underline;
 }
 </style>
