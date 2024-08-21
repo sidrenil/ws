@@ -191,6 +191,11 @@ nav ul.menu li {
   position: relative;
 }
 
+nav ul.menu li a {
+  color: black;
+  text-decoration: none;
+}
+
 .right-container {
   flex: 1;
   display: flex;
