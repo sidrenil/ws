@@ -68,7 +68,7 @@ const addToCart = () => {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   width: 300px;
   height: 350px;
   display: flex;
@@ -80,6 +80,7 @@ const addToCart = () => {
 
 .card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 4px 6px 4px rgb(186, 209, 233);
 }
 
 .icon-container {
