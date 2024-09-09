@@ -2,10 +2,19 @@
   <div class="profile-container">
     <div class="profile-form">
       <h1>Profile</h1>
-      <form @submit.prevent="updatePassword">
+      <form @submit.prevent="updatePasswordFn">
         <div class="form-group">
           <label for="profile-email">Email</label>
           <input type="email" id="profile-email" v-model="email" disabled />
+        </div>
+        <div class="form-group">
+          <label for="current-password">Current Password</label>
+          <input
+            type="password"
+            id="current-password"
+            v-model="currentPassword"
+            required
+          />
         </div>
         <div class="form-group">
           <label for="new-password">New Password</label>
@@ -30,12 +39,18 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { updatePassword, onAuthStateChanged } from "firebase/auth";
+import {
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth } from "@/firebase";
 import { useRouter } from "vue-router";
 
 const email = ref("");
 const newPassword = ref("");
+const currentPassword = ref("");
 const message = ref("");
 const isSuccess = ref(true);
 const router = useRouter();
@@ -52,9 +67,15 @@ const loadProfile = () => {
   });
 };
 
-const updatePassword = async () => {
+const updatePasswordFn = async () => {
   try {
     if (currentUser.value) {
+      const credential = EmailAuthProvider.credential(
+        currentUser.value.email,
+        currentPassword.value
+      );
+      await reauthenticateWithCredential(currentUser.value, credential);
+
       await updatePassword(currentUser.value, newPassword.value);
       message.value = "Password updated successfully!";
       isSuccess.value = true;
@@ -72,6 +93,7 @@ onMounted(() => {
   loadProfile();
 });
 </script>
+
 <style scoped>
 .profile-container {
   display: flex;

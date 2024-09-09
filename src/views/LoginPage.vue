@@ -22,6 +22,7 @@
         </div>
         <button type="submit" class="btn">Login</button>
       </form>
+      <p v-if="alertMessage">{{ alertMessage }}</p>
     </div>
     <div
       class="signup-section"
@@ -54,51 +55,64 @@
         </div>
         <button type="submit" class="btn">Sign Up</button>
       </form>
+      <p v-if="alertMessage">{{ alertMessage }}</p>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "@/firebase";
+
 const loginEmail = ref("");
 const loginPassword = ref("");
+const signupName = ref("");
+const signupEmail = ref("");
+const signupPassword = ref("");
 const isActive = ref("login");
 const alertMessage = ref("");
 const router = useRouter();
+
 const setActive = (section) => {
   isActive.value = section;
 };
-const login = () => {
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find(
-    (u) => u.email === loginEmail.value && u.password === loginPassword.value
-  );
-  if (user) {
-    localStorage.setItem("currentUserEmail", user.email);
+
+const login = async () => {
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      loginEmail.value,
+      loginPassword.value
+    );
     alertMessage.value = "Login successful!";
     setTimeout(() => {
       router.push("/profile");
-      router.push("/");
-    }, 3000);
-  } else {
-    alertMessage.value = "Invalid email or password";
+    }, 1000);
+  } catch (error) {
+    alertMessage.value = error.message;
   }
 };
-const signup = () => {
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  if (users.some((user) => user.email === signupEmail.value)) {
-    alertMessage.value = "Email already registered. Please log in.";
-    return;
+
+const signup = async () => {
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      signupEmail.value,
+      signupPassword.value
+    );
+    alertMessage.value = "Registration successful. You can now log in.";
+    setActive("login");
+  } catch (error) {
+    alertMessage.value = error.message;
   }
-  users.push({
-    name: signupName.value,
-    email: signupEmail.value,
-    password: signupPassword.value,
-  });
-  localStorage.setItem("users", JSON.stringify(users));
-  alertMessage.value = "Registration successful. You can now log in.";
 };
 </script>
+
 <style scoped>
 .login-container {
   display: flex;
@@ -112,15 +126,8 @@ const signup = () => {
   justify-content: center;
   align-items: center;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: #f5f5f5;
   transition: background-color 0.3s;
-}
-.login-section {
-  background-color: #f5f5f5;
-}
-.signup-section {
-  background-color: #f5f5f5;
 }
 h2 {
   margin-bottom: 20px;
@@ -158,15 +165,5 @@ h2 {
 }
 .btn:hover {
   background-color: #0056b3;
-}
-.login-section,
-.signup-section {
-  background-color: #ffffff;
-}
-.login-section:not(.active) {
-  background-color: #f5f5f5;
-}
-.signup-section:not(.active) {
-  background-color: #f5f5f5;
 }
 </style>

@@ -36,13 +36,13 @@
           >
             <button class="text-xl">Profile</button>
             <ul v-if="profileDropdownOpen" class="dropdown-menu">
-              <li>
+              <li v-if="isLoggedIn">
                 <router-link to="/profile">Change Password</router-link>
               </li>
-              <li>
+              <li v-if="!isLoggedIn">
                 <router-link to="/login">Login</router-link>
               </li>
-              <li>
+              <li v-if="isLoggedIn">
                 <button @click="logout">Log-Out</button>
               </li>
             </ul>
@@ -65,9 +65,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 import { useCartStore } from "@/stores/cartStore";
+import { onAuthStateChanged } from "firebase/auth";
 
 const router = useRouter();
 const route = useRoute();
@@ -76,6 +79,7 @@ const cartStore = useCartStore();
 const categories = ref([]);
 const dropdownOpen = ref(false);
 const profileDropdownOpen = ref(false);
+const isLoggedIn = ref(false);
 
 const cartItemCount = computed(() => cartStore.cartItemCount);
 
@@ -104,43 +108,43 @@ const updateCartItemCount = () => {
   cartStore.cart = cart;
 };
 
-const logout = () => {
-  localStorage.removeItem("currentUser");
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("profileEmail");
-  alert("Successfully exited.");
-  profileDropdownOpen.value = false;
-  router.push("/login");
+const logout = async () => {
+  try {
+    await signOut(auth);
+    alert("Successfully logged out.");
+    profileDropdownOpen.value = false;
+    router.push("/login");
+  } catch (error) {
+    console.error("Failed to log out:", error);
+    alert("Failed to log out.");
+  }
 };
 
 onMounted(() => {
   updateCartItemCount();
   window.addEventListener("update-cart", updateCartItemCount);
   fetchCategories();
+
+  onAuthStateChanged(auth, (user) => {
+    isLoggedIn.value = !!user;
+  });
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("update-cart", updateCartItemCount);
 });
-
-watch(
-  () => cartStore.cart,
-  () => {
-    cartItemCount.value = cartStore.cart.length;
-  }
-);
 </script>
 
-<style>
+<style scoped>
 nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   background-color: white;
-  padding: 30px 20px;
+  padding: 20px 30px;
   z-index: 1000;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-container {
@@ -170,13 +174,64 @@ nav ul.menu {
 }
 
 nav ul.menu li {
-  margin: 0 15px;
+  margin: 0 20px;
   position: relative;
 }
 
+nav ul.menu li button,
 nav ul.menu li a {
-  color: black;
+  color: #333;
   text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+nav ul.menu li button:hover,
+nav ul.menu li a:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+  border-radius: 5px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  list-style-type: none;
+  padding: 10px;
+  margin: 0;
+  z-index: 1000;
+  min-width: 150px;
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+}
+
+.dropdown-menu li a,
+.dropdown-menu li button {
+  text-decoration: none;
+  color: #333;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.dropdown-menu li a:hover,
+.dropdown-menu li button:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
 }
 
 .right-container {
@@ -186,37 +241,9 @@ nav ul.menu li a {
   align-items: center;
 }
 
-.auth-buttons {
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-}
-
-.auth-buttons i {
-  margin-right: 10px;
-}
-
-.backbtn {
-  font-size: 1.5rem;
-  color: #007bff;
-  cursor: pointer;
-  transition: transform 0.2s, color 0.2s;
-}
-
-.backbtn:hover {
-  transform: scale(1.1);
-  color: #0056b3;
-}
-
-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
 .cart-container {
   position: relative;
-  margin-right: 40px;
+  margin-right: 30px;
 }
 
 .cartshp {
@@ -233,46 +260,14 @@ button {
 
 .cart-count {
   position: absolute;
-  top: -10px;
+  top: -5px;
   right: -10px;
   background-color: red;
   color: white;
   border-radius: 50%;
-  padding: 3px 8px;
+  padding: 2px 6px;
   font-size: 0.75rem;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 150%;
-  left: 0;
-  background: white;
-  border: 1px solid #ddd;
-  list-style-type: none;
-  padding: 10px;
-  margin: 0;
-  z-index: 1000;
-}
-
-.dropdown-menu li {
-  padding: 5px 10px;
-}
-
-.dropdown-menu li a,
-.dropdown-menu li button {
-  text-decoration: none;
-  color: black;
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.dropdown-menu li a:hover,
-.dropdown-menu li button:hover {
-  text-decoration: underline;
+  min-width: 20px;
+  text-align: center;
 }
 </style>
