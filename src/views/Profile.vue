@@ -30,7 +30,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { updatePassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase";
 import { useRouter } from "vue-router";
 
@@ -39,36 +39,31 @@ const newPassword = ref("");
 const message = ref("");
 const isSuccess = ref(true);
 const router = useRouter();
+const currentUser = ref(null);
 
 const loadProfile = () => {
-  const currentUserEmail = localStorage.getItem("currentUserEmail");
-  if (!currentUserEmail) {
-    router.push("/login");
-    return;
-  }
-
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const currentUser = users.find((user) => user.email === currentUserEmail);
-
-  if (currentUser) {
-    email.value = currentUser.email;
-  } else {
-    router.push("/login");
-  }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      email.value = user.email;
+      currentUser.value = user;
+    } else {
+      router.push("/login");
+    }
+  });
 };
 
-const updatePassword = () => {
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const currentUserEmail = localStorage.getItem("currentUserEmail");
-  const user = users.find((user) => user.email === currentUserEmail);
-
-  if (user) {
-    user.password = newPassword.value;
-    localStorage.setItem("users", JSON.stringify(users));
-    message.value = "Password updated successfully!";
-    isSuccess.value = true;
-  } else {
-    message.value = "Failed to update password.";
+const updatePassword = async () => {
+  try {
+    if (currentUser.value) {
+      await updatePassword(currentUser.value, newPassword.value);
+      message.value = "Password updated successfully!";
+      isSuccess.value = true;
+    } else {
+      message.value = "User not found.";
+      isSuccess.value = false;
+    }
+  } catch (error) {
+    message.value = error.message;
     isSuccess.value = false;
   }
 };
@@ -77,7 +72,6 @@ onMounted(() => {
   loadProfile();
 });
 </script>
-
 <style scoped>
 .profile-container {
   display: flex;
