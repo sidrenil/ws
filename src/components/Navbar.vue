@@ -160,7 +160,6 @@ nav {
 .menu-container {
   flex: 2;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
@@ -169,13 +168,15 @@ nav ul.menu {
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: center;
-  flex: 1;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
 }
 
 nav ul.menu li {
-  margin: 0 20px;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 nav ul.menu li button,
@@ -183,9 +184,11 @@ nav ul.menu li a {
   color: #333;
   text-decoration: none;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   padding: 10px 15px;
-  transition: background-color 0.3s, color 0.3s;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 nav ul.menu li button:hover,
@@ -200,9 +203,9 @@ nav ul.menu li a:hover {
   top: 100%;
   left: 0;
   background: white;
-  border: 1px solid #ddd;
+  border: none;
   border-radius: 5px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   list-style-type: none;
   padding: 10px;
   margin: 0;
@@ -226,6 +229,7 @@ nav ul.menu li a:hover {
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 4px;
+  font-weight: 700;
 }
 
 .dropdown-menu li a:hover,
