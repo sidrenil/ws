@@ -244,7 +244,7 @@ button {
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 150%;
   left: 0;
   background: white;
   border: 1px solid #ddd;
