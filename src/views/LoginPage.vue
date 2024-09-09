@@ -91,7 +91,7 @@ const login = async () => {
     );
     alertMessage.value = "Login successful!";
     setTimeout(() => {
-      router.push("/profile");
+      router.push("/");
     }, 1000);
   } catch (error) {
     alertMessage.value = error.message;
