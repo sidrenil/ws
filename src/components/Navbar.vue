@@ -141,6 +141,7 @@ nav {
   top: 0;
   left: 0;
   width: 100%;
+  height: 90px;
   background-color: white;
   padding: 20px 30px;
   z-index: 1000;
@@ -158,7 +159,7 @@ nav {
 }
 
 .menu-container {
-  flex: 2;
+  flex: 1;
   display: flex;
   justify-content: center;
 }
@@ -168,9 +169,8 @@ nav ul.menu {
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 600px;
+  justify-content: center;
+  gap: 40px;
 }
 
 nav ul.menu li {
@@ -183,9 +183,9 @@ nav ul.menu li button,
 nav ul.menu li a {
   color: #333;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  padding: 10px 15px;
+  padding: 30px 35px;
   background-color: transparent;
   border: none;
   box-shadow: none;
@@ -194,7 +194,7 @@ nav ul.menu li a {
 nav ul.menu li button:hover,
 nav ul.menu li a:hover {
   background-color: #f0f0f0;
-  color: #007bff;
+  color: gray;
   border-radius: 5px;
 }
 
@@ -242,12 +242,12 @@ nav ul.menu li a:hover {
   flex: 1;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  margin-right: 50px;
 }
 
 .cart-container {
   position: relative;
-  margin-right: 30px;
+  margin-left: auto;
 }
 
 .cartshp {
