@@ -34,7 +34,9 @@
             @mouseover="profileDropdownOpen = true"
             @mouseleave="profileDropdownOpen = false"
           >
-            <button class="text-xl">Profile</button>
+            <button class="text-xl">
+              <i class="fa-solid fa-user"></i> Profile
+            </button>
             <ul v-if="profileDropdownOpen" class="dropdown-menu">
               <li v-if="isLoggedIn">
                 <router-link to="/profile">Change Password</router-link>
